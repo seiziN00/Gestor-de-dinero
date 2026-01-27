@@ -13,7 +13,7 @@ class TransferenciasFrame(ctk.CTkFrame):
 
         # ===== GRID CONTAINERS =====
         self.grid_columnconfigure((0, 1), weight=1)
-        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure((0, 1, 2, 3), weight=1)
 
         self.radiobutons_frame = ctk.CTkFrame(self)
         self.radiobutons_frame.grid(row=0, column=0, padx=(10, 5), pady=(10, 5), sticky="nwes")
@@ -23,14 +23,35 @@ class TransferenciasFrame(ctk.CTkFrame):
         self.checkboxes_frame.grid(row=0, column=1, padx=(5, 10), pady=(10, 5), sticky="nwes")
         self.checkboxes_frame.grid_columnconfigure(1, weight=1)
 
-        self.cambio_frame =ctk.CTkFrame(self)
-        self.cambio_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=5, sticky="nwes")
+        self.main_frame = ctk.CTkFrame(self)
+        self.main_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=5, sticky="nwes")
+        self.main_frame.grid_columnconfigure(0, weight=1)
+        self.action_frame = ctk.CTkFrame(self)
+        self.action_frame.grid(
+            row=2, column=0, columnspan=2,
+            padx=10, pady=(0, 5), sticky="we"
+        )
+        self.action_frame.grid_columnconfigure(0, weight=1)
+        self.action_frame.grid_remove()
+        self.ingresar_btn = ctk.CTkButton(
+            self.action_frame,
+            text="Ingresar",
+            height=40,
+            command=self.ingresar_callback
+        )
+        self.ingresar_btn.grid(row=0, column=0, sticky="we")
+
+        self.cambio_frame = ctk.CTkFrame(self)
+        self.cambio_frame.grid(row=3, column=0, columnspan=2, padx=10, pady=5, sticky="nwes")
         self.cambio_frame.grid_columnconfigure((0, 1), weight=1)
-        self.cambio_frame.grid_rowconfigure((0, 1), weight=1)
+        self.cambio_frame.grid_rowconfigure((0, 1, 2, 3), weight=1)
 
         self.textbox_frame = ctk.CTkFrame(self)
-        self.textbox_frame.grid(row=2, column=0, columnspan=2, padx=10, pady=(5, 10), sticky="nwes")
+        self.textbox_frame.grid(row=4, column=0, columnspan=2, padx=10, pady=(5, 10), sticky="nwes")
         self.textbox_frame.grid_columnconfigure(0, weight=1)
+
+        self.main_frame.grid_remove()
+        self.cambio_frame.grid_remove()
 
         # ===== RADIO BUTTONS =====
         self.radio_var = ctk.IntVar(value=1)  # default seleccionado
@@ -66,8 +87,8 @@ class TransferenciasFrame(ctk.CTkFrame):
         # Cada checkbox tiene su propia variable
         self.checkbox_vars = {
             "Efectivo": ctk.IntVar(value=0),
-            "Scotiabank/Plin": ctk.IntVar(value=0),
-            "Yape": ctk.IntVar(value=0)
+            "Yape": ctk.IntVar(value=0),
+            "Scotiabank/Plin": ctk.IntVar(value=0)
         }
 
         c = 1
@@ -94,7 +115,7 @@ class TransferenciasFrame(ctk.CTkFrame):
 
         self.combobox_1 = ctk.CTkComboBox(
         	self.cambio_frame,
-        	values=["Efectivo", "Scotiabank/Plin", "Yape"],
+        	values=["Efectivo", "Yape", "Scotiabank/Plin"],
         	command=self.combobox_callback
         )
         self.combobox_1.grid(row=1, column=0, padx=25, pady=10)
@@ -108,7 +129,7 @@ class TransferenciasFrame(ctk.CTkFrame):
 
         self.combobox_2 = ctk.CTkComboBox(
         	self.cambio_frame,
-        	values=["Efectivo", "Scotiabank/Plin", "Yape"],
+        	values=["Efectivo", "Yape", "Scotiabank/Plin"],
         	command=self.combobox_callback
         )
         self.combobox_2.grid(row=1, column=2, padx=25, pady=10)
@@ -123,17 +144,29 @@ class TransferenciasFrame(ctk.CTkFrame):
         # ===== NOTAS =====
         ctk.CTkLabel(
         	self.textbox_frame,
-        	text="Notas",
+        	text="Nota",
         	font=("Arial", 14, "bold"),
         	fg_color="gray30",
         	corner_radius=6
         ).grid(row=0, column=0, sticky="we")
         self.textbox = ctk.CTkTextbox(
         	self.textbox_frame,
-        	height=80
+        	height=40
         )
         self.textbox.grid(row=1, column=0, sticky="we")
 
+        self.no_pago_label = ctk.CTkLabel(
+            self.main_frame,
+            text="<Seleccione un método de pago>",
+            font=("Arial", 22, "italic"),
+            text_color="gray70"
+        )
+
+        self.entries_por_metodo = {}
+
+        self.radiobutton_event()
+
+        
     # ===== GETters =====
     def get_cambio(self):
         return {
@@ -147,15 +180,94 @@ class TransferenciasFrame(ctk.CTkFrame):
 
     # ===== CALLBACKS =====
     def radiobutton_event(self):
-        print("RadioButton seleccionado →", self.radio_var.get())
+        tipo_id = self.radio_var.get()
+        tipo_texto = TIPOS_MOVIMIENTO[tipo_id]
+
+        print("Tipo movimiento →", tipo_texto)
+
+        if tipo_id in (1, 2):
+            self.show_main_frame()
+            self.update_main_frame()
+        else:
+            self.show_cambio_frame()
+            self.action_frame.grid_remove()
+
 
     def checkbox_event(self):
-        # Mostrar todos los seleccionados
         selected = [k for k, v in self.checkbox_vars.items() if v.get() == 1]
         print("Checkbox seleccionados →", selected)
+        self.update_main_frame()
 
     def combobox_callback(self, choice):
     	print("combobox dropdown clicked:", choice)
 
     def cambio_callback(self):
     	print("Cambio de", self.combobox_1.get(), "a", self.combobox_2.get(), self.cambio_moneda.get())
+
+    def ingresar_callback(self):
+        print("Tipo", self.get_tipo_movimiento())
+        print("Monto(s)", self.get_montos_por_metodo())
+        print("Nota", self.textbox.get("1.0", "end").strip())
+
+    # Para mostrar / ocultar los frames
+    def show_main_frame(self):
+        self.cambio_frame.grid_remove()
+        self.main_frame.grid() 
+
+    def show_cambio_frame(self):
+        self.main_frame.grid_remove()
+        self.cambio_frame.grid()
+
+    # Limpiar el mainframe
+    def clear_main_frame(self):
+        for widget in self.main_frame.winfo_children():
+            widget.grid_remove()
+
+    # Updatear el mainframe
+    def update_main_frame(self):
+        self.clear_main_frame()
+        self.entries_por_metodo.clear()
+
+        seleccionados = [
+            k for k, v in self.checkbox_vars.items() if v.get() == 1
+        ]
+
+        if not seleccionados:
+            self.no_pago_label.grid(row=0, column=0, pady=20)
+            self.action_frame.grid_remove()
+            return
+
+        self.action_frame.grid()
+
+        for i, metodo in enumerate(seleccionados):
+            frame = ctk.CTkFrame(self.main_frame)
+            frame.grid(row=i, column=0, padx=10, pady=6, sticky="we")
+
+            ctk.CTkLabel(
+                frame,
+                text=metodo,
+                font=("Arial", 13, "bold")
+            ).pack(side="left", padx=10)
+
+            entry = ctk.CTkEntry(
+                frame,
+                placeholder_text="Monto"
+            )
+            entry.pack(side="right", padx=10)
+
+            # Guardar referencias en el dict
+            self.entries_por_metodo[metodo] = entry
+
+    # Helper para ver por cmd el output
+    def get_montos_por_metodo(self):
+        datos = {}
+
+        for metodo, entry in self.entries_por_metodo.items():
+            valor = entry.get().strip()
+
+            if valor == "":
+                datos[metodo] = 0
+            else:
+                datos[metodo] = float(valor)
+
+        return datos

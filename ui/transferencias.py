@@ -1,5 +1,12 @@
 import customtkinter as ctk
 
+TIPOS_MOVIMIENTO = {
+    1: "Ingreso",
+    2: "Gasto",
+    3: "Cambio",
+    4: "Préstamo"
+}
+
 class TransferenciasFrame(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent, corner_radius=0, fg_color="transparent")
@@ -36,14 +43,16 @@ class TransferenciasFrame(ctk.CTkFrame):
         	corner_radius=6
         ).grid(row=0, column=0, padx=10, pady=12, sticky="we")
         
-        for i, text in enumerate(["Ingreso", "Gasto", "Cambio", "Préstamo"], start=1):
+        
+
+        for k, v in TIPOS_MOVIMIENTO.items():
             ctk.CTkRadioButton(
                 self.radiobutons_frame,
-                text=text,
+                text=v,
                 variable=self.radio_var,
-                value=i,
+                value=k,
                 command=self.radiobutton_event
-            ).grid(row=i, column=0, pady=4, padx=20, sticky="w")
+            ).grid(row=k, column=0, pady=4, padx=20, sticky="w")
 
         # ===== CHECKBOXES =====
         ctk.CTkLabel(
@@ -77,10 +86,11 @@ class TransferenciasFrame(ctk.CTkFrame):
         	text="Cambio: S/",
         ).grid(row=0, column=0, padx=10, pady=5)
 
-        ctk.CTkEntry(
+        self.cambio_moneda = ctk.CTkEntry(
         	self.cambio_frame,
         	placeholder_text="Money"
-        ).grid(row=0, column=1, padx=10, pady=5)
+        )
+        self.cambio_moneda.grid(row=0, column=1, padx=10, pady=5)
 
         self.combobox_1 = ctk.CTkComboBox(
         	self.cambio_frame,
@@ -124,6 +134,17 @@ class TransferenciasFrame(ctk.CTkFrame):
         )
         self.textbox.grid(row=1, column=0, sticky="we")
 
+    # ===== GETters =====
+    def get_cambio(self):
+        return {
+            "monto": self.cambio_moneda.get(),
+            "origen": self.combobox_1.get(),
+            "destino": self.combobox_2.get()
+        }
+
+    def get_tipo_movimiento(self):
+        return TIPOS_MOVIMIENTO.get(self.radio_var.get())
+
     # ===== CALLBACKS =====
     def radiobutton_event(self):
         print("RadioButton seleccionado →", self.radio_var.get())
@@ -137,4 +158,4 @@ class TransferenciasFrame(ctk.CTkFrame):
     	print("combobox dropdown clicked:", choice)
 
     def cambio_callback(self):
-    	print("Cambio de", self.combobox_1.get(), "a", self.combobox_2.get())
+    	print("Cambio de", self.combobox_1.get(), "a", self.combobox_2.get(), self.cambio_moneda.get())

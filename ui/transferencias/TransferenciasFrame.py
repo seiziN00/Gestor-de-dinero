@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from config.constants import TIPOS_MOVIMIENTO
+from config.constants import TIPOS_MOVIMIENTO, METODOS_PAGO
 from .TransferenciasState import TransferenciasState
 
 
@@ -48,6 +48,10 @@ class TransferenciasFrame(ctk.CTkFrame):
         self.textbox_frame = ctk.CTkFrame(self)
         self.textbox_frame.grid(row=4, column=0, columnspan=2, padx=10, pady=(5, 10), sticky="nwes")
 
+    def get_tipo_dato(self):
+        print(self.radio_var.get())
+        print(type(self.radio_var.get()))
+
     def _build_radiobuttons(self):
         self.radio_var = ctk.IntVar(value=1)
 
@@ -74,9 +78,8 @@ class TransferenciasFrame(ctk.CTkFrame):
         ).pack(fill="x", padx=10, pady=10)
 
         self.checkbox_vars = {
-            "Efectivo": ctk.IntVar(),
-            "Yape": ctk.IntVar(),
-            "Scotiabank/Plin": ctk.IntVar()
+            metodo: ctk.IntVar()
+            for metodo in METODOS_PAGO
         }
 
         for metodo, var in self.checkbox_vars.items():
@@ -95,7 +98,7 @@ class TransferenciasFrame(ctk.CTkFrame):
 
         self.combobox_1 = ctk.CTkComboBox(
             self.cambio_frame,
-            values=list(self.checkbox_vars.keys())
+            values=METODOS_PAGO
         )
         self.combobox_1.grid(row=1, column=0, padx=10, pady=10)
 
@@ -103,7 +106,7 @@ class TransferenciasFrame(ctk.CTkFrame):
 
         self.combobox_2 = ctk.CTkComboBox(
             self.cambio_frame,
-            values=list(self.checkbox_vars.keys())
+            values=METODOS_PAGO
         )
         self.combobox_2.grid(row=1, column=2, padx=10, pady=10)
 
@@ -132,6 +135,7 @@ class TransferenciasFrame(ctk.CTkFrame):
 
     def on_tipo_change(self):
         self.state.tipo_movimiento = self.radio_var.get()
+        self.get_tipo_dato()
         self.render()
 
     def on_metodos_change(self):

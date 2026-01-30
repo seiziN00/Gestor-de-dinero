@@ -2,7 +2,7 @@ import customtkinter as ctk
 from ui.sidebar import Sidebar
 from ui.dashboard import DashboardFrame
 from ui.movimientos import MovimientosFrame
-from ui.transferencias import TransferenciasFrame
+from ui.transferencias.TransferenciasFrame import TransferenciasFrame
 from database.db import init_db
 
 class App(ctk.CTk):

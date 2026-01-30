@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from config.constants import TIPOS_MOVIMIENTO, METODOS_PAGO
+from config.constants import METODO_PAGO_LABELS, METODO_PAGO_BY_LABEL, METODO_PAGO_BY_ID
 from .TransferenciasState import TransferenciasState
 
 
@@ -77,15 +78,15 @@ class TransferenciasFrame(ctk.CTkFrame):
             font=("Arial", 14, "bold")
         ).pack(fill="x", padx=10, pady=10)
 
-        self.checkbox_vars = {
-            metodo: ctk.IntVar()
-            for metodo in METODOS_PAGO
-        }
+        self.checkbox_vars = {}
 
-        for metodo, var in self.checkbox_vars.items():
+        for metodo in METODOS_PAGO:
+            var = ctk.IntVar(value=1 if metodo["default"] else 0)
+            self.checkbox_vars[metodo["id"]] = var
+
             ctk.CTkCheckBox(
                 self.checkboxes_frame,
-                text=metodo,
+                text=metodo["label"],
                 variable=var,
                 command=self.on_metodos_change
             ).pack(anchor="w", padx=20, pady=2)
@@ -98,7 +99,7 @@ class TransferenciasFrame(ctk.CTkFrame):
 
         self.combobox_1 = ctk.CTkComboBox(
             self.cambio_frame,
-            values=METODOS_PAGO
+            values=METODO_PAGO_LABELS
         )
         self.combobox_1.grid(row=1, column=0, padx=10, pady=10)
 
@@ -106,7 +107,7 @@ class TransferenciasFrame(ctk.CTkFrame):
 
         self.combobox_2 = ctk.CTkComboBox(
             self.cambio_frame,
-            values=METODOS_PAGO
+            values=METODO_PAGO_LABELS
         )
         self.combobox_2.grid(row=1, column=2, padx=10, pady=10)
 

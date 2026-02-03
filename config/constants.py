@@ -22,6 +22,9 @@ TIPOS_MOVIMIENTO = [
 ]
 
 TIPOS_MOVIMIENTO_STATE = [t["id"] for t in TIPOS_MOVIMIENTO if t["selected"]]
+TIPOS_MOVIMIENTO_BY_ID = {
+    t["id"]: t["label"] for t in TIPOS_MOVIMIENTO
+}
 
 
 METODOS_PAGO = [

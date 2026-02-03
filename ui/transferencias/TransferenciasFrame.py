@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from config.constants import TIPOS_MOVIMIENTO, METODOS_PAGO
-from config.constants import METODO_PAGO_LABELS, TIPOS_MOVIMIENTO_STATE
+from config.constants import METODO_PAGO_LABELS, TIPOS_MOVIMIENTO_STATE, TIPOS_MOVIMIENTO_BY_ID
 from .TransferenciasState import TransferenciasState
 
 
@@ -235,6 +235,6 @@ class TransferenciasFrame(ctk.CTkFrame):
         }
 
     def ingresar_callback(self):
-        print("Tipo:", TIPOS_MOVIMIENTO[self.state.tipo_movimiento])
+        print("Tipo:", TIPOS_MOVIMIENTO_BY_ID[self.state.tipo_movimiento])
         print("Montos:", self.get_montos_por_metodo())
         #print("Nota:", self.textbox.get("1.0", "end").strip())

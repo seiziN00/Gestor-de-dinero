@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from config.constants import TIPOS_MOVIMIENTO, METODOS_PAGO
-from config.constants import METODO_PAGO_LABELS, METODO_PAGO_BY_LABEL, METODO_PAGO_BY_ID
+from config.constants import METODO_PAGO_LABELS, TIPOS_MOVIMIENTO_STATE
 from .TransferenciasState import TransferenciasState
 
 
@@ -49,25 +49,27 @@ class TransferenciasFrame(ctk.CTkFrame):
         self.textbox_frame = ctk.CTkFrame(self)
         self.textbox_frame.grid(row=4, column=0, columnspan=2, padx=10, pady=(5, 10), sticky="nwes")
 
-    def get_tipo_dato(self):
+    def get_tipo_dato(self): # ¡¡¡ TEMPORAL !!!
         print(self.radio_var.get())
-        print(type(self.radio_var.get()))
 
     def _build_radiobuttons(self):
-        self.radio_var = ctk.IntVar(value=1)
+        estado_selected = TIPOS_MOVIMIENTO_STATE[0] if TIPOS_MOVIMIENTO_STATE else 1
+        self.radio_var = ctk.IntVar(value=estado_selected)
 
         ctk.CTkLabel(
             self.radiobutons_frame,
             text="Tipo de movimiento",
-            font=("Arial", 14, "bold")
+            font=("Arial", 14, "bold"),
+            fg_color="gray30",
+            corner_radius=6
         ).pack(fill="x", padx=10, pady=10)
 
-        for k, v in TIPOS_MOVIMIENTO.items():
+        for tipo in TIPOS_MOVIMIENTO:
             ctk.CTkRadioButton(
                 self.radiobutons_frame,
-                text=v,
+                text=tipo["label"],
                 variable=self.radio_var,
-                value=k,
+                value=tipo["id"],
                 command=self.on_tipo_change
             ).pack(anchor="w", padx=20, pady=2)
 
@@ -75,14 +77,16 @@ class TransferenciasFrame(ctk.CTkFrame):
         ctk.CTkLabel(
             self.checkboxes_frame,
             text="Método de pago",
-            font=("Arial", 14, "bold")
+            font=("Arial", 14, "bold"),
+            fg_color="gray30",
+            corner_radius=6
         ).pack(fill="x", padx=10, pady=10)
 
         self.checkbox_vars = {}
 
         for metodo in METODOS_PAGO:
             var = ctk.IntVar(value=1 if metodo["default"] else 0)
-            self.checkbox_vars[metodo["id"]] = var
+            self.checkbox_vars[metodo["label"]] = var
 
             ctk.CTkCheckBox(
                 self.checkboxes_frame,
@@ -152,7 +156,7 @@ class TransferenciasFrame(ctk.CTkFrame):
     def render(self):
         self._hide_all()
 
-        if self.state.tipo_movimiento in (1, 2):
+        if self.state.tipo_movimiento in (1, 2): # Obligado 1 y 2
             self._render_ingreso_gasto()
         else:
             self._render_cambio()
@@ -209,10 +213,14 @@ class TransferenciasFrame(ctk.CTkFrame):
         frame = ctk.CTkFrame(self.main_frame)
         frame.pack(fill="x", padx=10, pady=5)
 
-        ctk.CTkLabel(frame, text=metodo, font=("Arial", 13, "bold")).pack(side="left")
+        ctk.CTkLabel(
+            frame,
+            text=metodo,
+            font=("Arial", 13, "bold")
+        ).pack(side="left", padx=10)
 
         entry = ctk.CTkEntry(frame, placeholder_text="Monto")
-        entry.pack(side="right")
+        entry.pack(side="right", padx=10)
 
         self.entries_por_metodo[metodo] = entry
 
@@ -229,4 +237,4 @@ class TransferenciasFrame(ctk.CTkFrame):
     def ingresar_callback(self):
         print("Tipo:", TIPOS_MOVIMIENTO[self.state.tipo_movimiento])
         print("Montos:", self.get_montos_por_metodo())
-        print("Nota:", self.textbox.get("1.0", "end").strip())
+        #print("Nota:", self.textbox.get("1.0", "end").strip())

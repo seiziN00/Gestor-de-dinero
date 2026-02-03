@@ -1,39 +1,46 @@
-DEFAULTS = {
-    "tipo_movimiento": 1,
-    "metodos_pago": ["Efectivo"]
-}
+TIPOS_MOVIMIENTO = [
+    {
+        "id": 1,
+        "label": "Ingreso",
+        "selected": True
+    },
+    {
+        "id": 2,
+        "label": "Gasto",
+        "selected": False
+    },
+    {
+        "id": 3,
+        "label": "Cambio",
+        "selected": False
+    },
+    {
+        "id": 4,
+        "label": "Préstamo",
+        "selected": False
+    }
+]
 
-TIPOS_MOVIMIENTO = {
-    1: "Ingreso",
-    2: "Gasto",
-    3: "Cambio",
-    4: "Préstamo"
-}
+TIPOS_MOVIMIENTO_STATE = [t["id"] for t in TIPOS_MOVIMIENTO if t["selected"]]
+
 
 METODOS_PAGO = [
     {
-        "id": "efectivo",
+        "id": 1,
         "label": "Efectivo",
         "default": True
     },
     {
-        "id": "yape",
+        "id": 2,
         "label": "Yape",
         "default": False
     },
     {
-        "id": "plin",
+        "id": 3,
         "label": "Scotiabank / Plin",
         "default": False
     }
 ]
 
 METODO_PAGO_LABELS = [m["label"] for m in METODOS_PAGO]
-
-METODO_PAGO_BY_LABEL = {
-    m["label"]: m["id"] for m in METODOS_PAGO
-}
-
-METODO_PAGO_BY_ID = {
-    m["id"]: m["label"] for m in METODOS_PAGO
-}
+METODO_PAGO_STATE = [m["label"] for m in METODOS_PAGO if m["default"]]

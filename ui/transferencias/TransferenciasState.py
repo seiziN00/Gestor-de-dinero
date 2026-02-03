@@ -1,7 +1,6 @@
-from config.constants import DEFAULTS
+from config.constants import TIPOS_MOVIMIENTO_STATE, METODO_PAGO_STATE
 
 class TransferenciasState:
-	"""docstring for TransferenciasState"""
 	def __init__(self):
-		self.tipo_movimiento = 1
-		self.metodos_pago = set(DEFAULTS["metodos_pago"])
+		self.tipo_movimiento = TIPOS_MOVIMIENTO_STATE[0] if TIPOS_MOVIMIENTO_STATE else 1
+		self.metodos_pago = METODO_PAGO_STATE

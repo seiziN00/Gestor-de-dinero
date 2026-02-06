@@ -1,8 +1,36 @@
-def hacer_cambio(datos):
-	if datos["origen"] == datos["destino"]:
-		raise ValueError("No puedes cambiar al mismo método")
+from db.database import get_connection
+from db.movimientos_repo import (
+    insertar_movimiento,
+    insertar_metodo,
+    insertar_nota
+)
+from datetime import date
 
-	if datos["monto"] <= 0:
-		raise ValueError("Monto inválido")
+def registrar_transferencia(state, montos_por_metodo, nota):
+    conn = get_connection()
+    cursor = conn.cursor()
 
-	# Más lógica...
+    try:
+        fecha = date.today().strftime("%d-%m-%Y")
+
+        movimiento_id = insertar_movimiento(
+            cursor,
+            tipo_movimiento=state.tipo_movimiento,
+            fecha=fecha
+        )
+
+        for metodo, monto in montos_por_metodo.items():
+            insertar_metodo(cursor, movimiento_id, metodo, monto)
+
+        if nota:
+            insertar_nota(cursor, movimiento_id, nota)
+
+        conn.commit()
+        return movimiento_id
+
+    except Exception:
+        conn.rollback()
+        raise
+
+    finally:
+        conn.close()

@@ -3,7 +3,7 @@ from ui.sidebar import Sidebar
 from ui.dashboard import DashboardFrame
 from ui.movimientos import MovimientosFrame
 from ui.transferencias.TransferenciasFrame import TransferenciasFrame
-from database.db import init_db
+from db.init_db import init_db
 
 class App(ctk.CTk):
     def __init__(self):

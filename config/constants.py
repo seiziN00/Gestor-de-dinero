@@ -47,3 +47,13 @@ METODOS_PAGO = [
 
 METODO_PAGO_LABELS = [m["label"] for m in METODOS_PAGO]
 METODO_PAGO_STATE = [m["label"] for m in METODOS_PAGO if m["default"]]
+
+
+METODOS_PAGO_MAP = {
+    m["id"]: m["label"]
+    for m in METODOS_PAGO
+}
+
+TIPOS_MOVIMIENTO_MAP = {
+    t["id"]: t["label"] for t in TIPOS_MOVIMIENTO
+}

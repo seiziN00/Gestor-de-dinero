@@ -27,3 +27,21 @@ CREATE TABLE IF NOT EXISTS cambios (
     destino INTEGER NOT NULL,
     FOREIGN KEY (movimiento_id) REFERENCES movimientos(id)
 );
+
+CREATE TABLE IF NOT EXISTS catalogo (
+    categoria TEXT NOT NULL,
+    id TEXT NOT NULL,
+    nombre TEXT NOT NULL,
+    disponible TEXT NOT NULL
+);
+
+INSERT INTO catalogo (categoria, id, nombre, disponible)
+VALUES (1, 0, "TIPOS_MOVIMIENTO", 0),
+       (1, 1, "ingreso", 1),
+       (1, 2, "Gasto", 1),
+       (1, 3, "Cambio", 1),
+       (1, 4, "Préstamo", 1),
+       (2, 0, "METODO_PAGO", 0),
+       (2, 1, "Efectivo", 1),
+       (2, 2, "Yape", 1),
+       (2, 3, "Scotiabank/Plin", 1)

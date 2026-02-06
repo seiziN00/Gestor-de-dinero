@@ -238,14 +238,19 @@ class TransferenciasFrame(ctk.CTkFrame):
             for metodo, entry in self.entries_por_metodo.items()
         }
 
+    # def ingresar_callback(self):
+    #     montos = self.get_montos_por_metodo()
+    #     nota = self.textbox.get("1.0", "end").strip()
+
+    #     movimiento_id = registrar_transferencia(
+    #         state = self.state,
+    #         montos_por_metodo = montos,
+    #         nota = nota
+    #     )
+
+    #     print("Movimiento guardado:", movimiento_id)
+
     def ingresar_callback(self):
-        montos = self.get_montos_por_metodo()
-        nota = self.textbox.get("1.0", "end").strip()
-
-        movimiento_id = registrar_transferencia(
-            state = self.state,
-            montos_por_metodo = montos,
-            nota = nota
-        )
-
-        print("Movimiento guardado:", movimiento_id)
+        print("Tipo:", TIPOS_MOVIMIENTO_BY_ID[self.state.tipo_movimiento])
+        print("Montos:", self.get_montos_por_metodo())
+        print("Nota:", self.textbox.get("1.0", "end").strip())

@@ -43,7 +43,7 @@ class App(ctk.CTk):
             view.pack_forget()
 
         # Mostrar dashboard by default
-        self.show_view("transferencias")
+        self.show_view("movimientos")
 
 
     def show_view(self, name):

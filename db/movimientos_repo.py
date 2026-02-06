@@ -17,3 +17,16 @@ def insertar_nota(cursor, movimiento_id, nota):
         INSERT INTO notas (movimiento_id, nota)
         VALUES (?, ?)   
     """, (movimiento_id, nota))
+
+def obtener_movimientos(cursor):
+    cursor.execute("""
+        SELECT 
+            m.tipo_movimiento,
+            mm.metodo_pago,
+            mm.monto
+        FROM movimientos m
+        JOIN movimiento_metodos mm 
+            ON m.id = mm.movimiento_id
+        ORDER BY m.fecha DESC
+    """)
+    return cursor.fetchall()

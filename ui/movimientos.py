@@ -21,6 +21,27 @@ class MovimientosFrame(ctk.CTkFrame):
 		self._load_data()
 		self.debug()
 
+		style = ttk.Style()
+		style.theme_use("default")
+		style.configure(
+			"Treeview",
+			background="#2b2b2b",
+			foreground="#00ff00",
+			rowheight=25,
+			fieldbackground="#343638",
+			bordercolor="#09f",
+			borderwidth=0
+		)
+		style.map("Treeview", background=[("selected", "#22559b")])
+		style.configure(
+			"Treeview.Heading",
+			font=('Calibri', 14, 'bold'),
+			background="#1f1f1f",
+			foreground="#0ff",
+			relief="flat",
+		)
+		style.map("Treeview.Heading", background=[("active", "#3484F0")])
+
 	def _create_table(self, parent):
 		columns = ("tipo", "metodo", "monto")
 

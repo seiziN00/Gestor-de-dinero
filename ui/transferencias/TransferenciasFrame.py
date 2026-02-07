@@ -136,6 +136,7 @@ class TransferenciasFrame(ctk.CTkFrame):
             height=40,
             command=self.ingresar_callback
         )
+        self.ingresar_btn.configure(cursor="umbrella")
         self.ingresar_btn.pack(fill="x")
 
     # =========================================================
